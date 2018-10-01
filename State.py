@@ -12,9 +12,11 @@ class GameState(object):
 		self.__paddle1 = Paddle(self.screen, (50,50))
 		self.__table = Table(self.screen, (200, 350))
 		self.__net = Net(self.screen, (499, 300))
-		self.__entities = [self.__paddle1, self.__table, self.__net]
+		self.__ball = Ball(self.screen, (200, 100))
+		self.__entities = [self.__paddle1, self.__table, self.__net, self.__ball]
 		
 	def tick(self):
+		self.__ball.tick()
 		self.__table.tick()
 		self.__net.tick()
 		self.__paddle1.tick()
@@ -24,7 +26,7 @@ class GameState(object):
 		self.screen.fill(Colors.WHITE)
 		self.__table.render()
 		self.__net.render()
-		self.screen.blit(Images.ball, (200, 100))
+		self.__ball.render()
 		self.__paddle1.render()
 		
 

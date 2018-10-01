@@ -32,6 +32,7 @@ class Paddle(Entity):
 	
 	def __init__(self, screen, position):
 		super(Paddle, self).__init__(screen, Images.paddle, position, (20, 90))
+		self.__velocity = (0, 0)
 	
 	def tick(self):
 		self.__last_x = self.x
@@ -50,6 +51,9 @@ class Paddle(Entity):
 				self.x = 503
 			else:
 				self.x = 499 - 20
+	
+	def get_velocity(self):
+		return this.__velocity
 
 class Table(Entity):
 	def __init__(self, screen, position):
@@ -66,7 +70,15 @@ class Net(Entity):
 		pass
 
 class Ball(Entity):
-	pass
+	def __init__(self, screen, position):
+		super(Ball, self).__init__(screen, Images.ball, position, (25, 25))
+		
+		
+	def on_impact(self, entity): # What to do when impact occures
+		pass
+		
+	def get_velocity(self):
+		return this.__velocity
 	
 def check_impacts(entities):
 	for entity1 in entities:
