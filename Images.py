@@ -2,13 +2,13 @@
 import pygame
 import Colors
 
-paddle = pygame.image.load(r"C:\Users\nimro\OneDrive\Documents\python\PyPong\res\paddle.png")
+paddle = pygame.image.load(r"res\paddle.png")
 paddle.set_colorkey(Colors.PINK)
 
-table = pygame.image.load(r"C:\Users\nimro\OneDrive\Documents\python\PyPong\res\table.png")
+table = pygame.image.load(r"res\table.png")
 table.set_colorkey(Colors.PINK)
 
-net = pygame.image.load(r"C:\Users\nimro\OneDrive\Documents\python\PyPong\res\net.png")
+net = pygame.image.load(r"res\net.png")
 
-ball = pygame.image.load(r"C:\Users\nimro\OneDrive\Documents\python\PyPong\res\ball.png")
+ball = pygame.image.load(r"res\ball.png")
 ball.set_colorkey(Colors.PINK)

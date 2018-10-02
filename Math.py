@@ -2,7 +2,16 @@
 # point = (x, y)
 # hitbox/rect = (width, height)
 # The combination of the two above gives us an absolute rectangle on the screen.
+# vel = [xVel, yVel]
 
+# Recieves two velocities, vel1 and vel2, and returns the velocity of obj1 after collision
+def get_collision_vel(vel1, vel2, adj):
+	return [(vel1[0] + vel2[0])*adj, (vel1[1] + vel2[1])*adj]
+
+# Recieves current position and velocity and returns new position according to velocity
+def get_new_pos(pos, vel):
+	return [pos[0] + vel[0], pos[1] + vel[1]]
+	
 # Returns true if the two given rectangles converge
 def boxes_converging(pos1, hitbox1, pos2, hitbox2):
 	converging = False
@@ -19,7 +28,7 @@ def point_in_rect(point, pos, hitbox):
 def rect_to_points(point, rect):
 	return point, (point[0]+rect[0], point[1]), (point[0], point[1]+rect[1]), (point[0]+rect[0], point[1]+rect[1])
 
-# Recieves two points and returns values of m and b in the function: y = mx + b	that passws through both points
+# Recieves two points and returns values of m and b in the function: y = mx + b	that passes through both points
 def interpolate_line(point1, point2):
 	m = (point1[1]-point2[1])/(point1[0]-point2[0])
 	b = m*(-point1[0]) + point1[1]

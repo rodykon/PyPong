@@ -41,6 +41,9 @@ class Paddle(Entity):
 		self.x = mx - 0.5*20
 		self.y = my - 90
 		
+		# Update velocity - velocity is in px / ticks
+		self.__velocity = (self.x - self.__last_x, self.y - self.__last_y)
+		
 	def on_impact(self, entity): # What to do when impact occures
 		if isinstance(entity, Table):
 			if self.x <= 800 and self.x >= 180:
@@ -53,7 +56,7 @@ class Paddle(Entity):
 				self.x = 499 - 20
 	
 	def get_velocity(self):
-		return this.__velocity
+		return self.__velocity
 
 class Table(Entity):
 	def __init__(self, screen, position):
@@ -70,12 +73,33 @@ class Net(Entity):
 		pass
 
 class Ball(Entity):
+
+	GY = 0.5 # px / ticks^2
+	
 	def __init__(self, screen, position):
 		super(Ball, self).__init__(screen, Images.ball, position, (25, 25))
-		
+		self.__last_x, self.__last_y = (self.x, self.y)
+		self.__velocity = [0, 0]
+		self.__movable = False
+	
+	def tick(self):
+		if self.__movable:
+			self.__last_x = self.x
+			self.__last_y = self.y
+			
+			self.__velocity[1] = self.__velocity[1] + Ball.GY
+			
+			# Update position
+			self.x, self.y = Math.get_new_pos(self.get_position(), self.__velocity)
 		
 	def on_impact(self, entity): # What to do when impact occures
-		pass
+		if isinstance(entity, Paddle):
+			if not self.__movable:
+				self.__movable = True
+			self.__velocity = Math.get_collision_vel(self.__velocity, entity.get_velocity(), 0.5)
+		elif isinstance(entity, Table):
+			self.y = self.__last_y # Fix for 'ball stuck in table' bug
+			self.__velocity[1] = -self.__velocity[1]
 		
 	def get_velocity(self):
 		return this.__velocity
