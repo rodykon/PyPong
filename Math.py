@@ -6,7 +6,10 @@
 
 # Recieves two velocities, vel1 and vel2, and returns the velocity of obj1 after collision
 def get_collision_vel(vel1, vel2, adj):
-	return [(vel1[0] + vel2[0])*adj, (vel1[1] + vel2[1])*adj]
+	if (vel1[0] > 0 and vel2[0] < 0) or (vel1[0] < 0 and vel2[0] > 0) or vel2[0] == 0:
+		return [(-vel1[0] + vel2[0])*adj, (vel1[1] + vel2[1])*adj]
+	else:
+		return [(vel1[0] + vel2[0])*adj, (vel1[1] + vel2[1])*adj]
 
 # Recieves current position and velocity and returns new position according to velocity
 def get_new_pos(pos, vel):

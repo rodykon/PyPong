@@ -29,22 +29,31 @@ class Entity(object):
 		
 
 class Paddle(Entity):
+
+	HB_WIDTH = 20
+	HB_HEIGHT = 90
 	
-	def __init__(self, screen, position):
-		super(Paddle, self).__init__(screen, Images.paddle, position, (20, 90))
+	def __init__(self, screen, position, is_client):
+		super(Paddle, self).__init__(screen, Images.paddle, position, (Paddle.HB_WIDTH, Paddle.HB_HEIGHT))
 		self.__velocity = (0, 0)
+		self.__is_client = is_client
 	
 	def tick(self):
 		self.__last_x = self.x
 		self.__last_y = self.y
-		mx, my = Input.get_mouse_pos()
-		self.x = mx - 0.5*20
-		self.y = my - 90
+		
+		if self.__is_client:
+			mx, my = Input.get_mouse_pos()
+			self.x = mx - 0.5*Paddle.HB_WIDTH
+			self.y = my - Paddle.HB_HEIGHT
+			# This is where data will be sent to the server
+		else:
+			pass # This is where data from server will be received
 		
 		# Update velocity - velocity is in px / ticks
 		self.__velocity = (self.x - self.__last_x, self.y - self.__last_y)
 		
-	def on_impact(self, entity): # What to do when impact occures
+	def on_impact(self, entity): # What to do when impact occurs
 		if isinstance(entity, Table):
 			if self.x <= 800 and self.x >= 180:
 				self.y = 350-90
@@ -57,6 +66,9 @@ class Paddle(Entity):
 	
 	def get_velocity(self):
 		return self.__velocity
+	
+	def is_client(self):
+		return self.__is_client
 
 class Table(Entity):
 	def __init__(self, screen, position):
@@ -101,10 +113,15 @@ class Ball(Entity):
 				self.__movable = True
 			self.__velocity = Math.get_collision_vel(self.__velocity, entity.get_velocity(), 0.4)
 			# Fix for 'stuck on paddle' bug
-			if self.x > entity.get_position()[0] + 0.5*entity.get_hitbox()[0]:
-				self.x = entity.get_position()[0] + entity.get_hitbox()[0]
-			elif self.x < entity.get_position()[0] + 0.5*entity.get_hitbox()[0]:
-				self.x = entity.get_position()[0] - self.get_hitbox()[0]
+			if entity.get_velocity()[0] > 0:
+				self.x = entity.get_position()[0] + entity.get_hitbox()[0] + 2
+			elif entity.get_velocity()[0] < 0:
+				self.x = entity.get_position()[0] - self.get_hitbox()[0] - 2
+			else:
+				if (self.x > entity.get_position()[0] + 0.5*entity.get_hitbox()[0]):
+					self.x = entity.get_position()[0] + entity.get_hitbox()[0] + 2
+				elif (self.x < entity.get_position()[0] + 0.5*entity.get_hitbox()[0]):
+					self.x = entity.get_position()[0] - self.get_hitbox()[0] - 2
 		elif isinstance(entity, Table):
 			self.y = self.__last_y # Fix for 'ball stuck in table' bug
 			self.__velocity[1] = -self.__velocity[1]
