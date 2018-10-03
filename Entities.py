@@ -89,20 +89,28 @@ class Ball(Entity):
 			
 			self.__velocity[1] = self.__velocity[1] + Ball.GY
 			
-			# Update position
-			self.x, self.y = Math.get_new_pos(self.get_position(), self.__velocity)
+	def render(self):
+		# Update position
+		self.x, self.y = Math.get_new_pos(self.get_position(), self.__velocity)
+		self.screen.blit(self.image, (self.x, self.y))
+			
 		
 	def on_impact(self, entity): # What to do when impact occures
 		if isinstance(entity, Paddle):
 			if not self.__movable:
 				self.__movable = True
-			self.__velocity = Math.get_collision_vel(self.__velocity, entity.get_velocity(), 0.5)
+			self.__velocity = Math.get_collision_vel(self.__velocity, entity.get_velocity(), 0.4)
+			# Fix for 'stuck on paddle' bug
+			if self.x > entity.get_position()[0] + 0.5*entity.get_hitbox()[0]:
+				self.x = entity.get_position()[0] + entity.get_hitbox()[0]
+			elif self.x < entity.get_position()[0] + 0.5*entity.get_hitbox()[0]:
+				self.x = entity.get_position()[0] - self.get_hitbox()[0]
 		elif isinstance(entity, Table):
 			self.y = self.__last_y # Fix for 'ball stuck in table' bug
 			self.__velocity[1] = -self.__velocity[1]
 		
 	def get_velocity(self):
-		return this.__velocity
+		return self.__velocity
 	
 def check_impacts(entities):
 	for entity1 in entities:
