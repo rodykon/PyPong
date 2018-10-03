@@ -2,6 +2,7 @@ import pygame
 import Colors
 import Images
 from Entities import *
+import PyPong
 
 ACTIVE = "game"
 
@@ -9,7 +10,8 @@ class GameState(object):
 
 	def init(self, screen):
 		self.screen = screen
-		self.__paddle1 = Paddle(self.screen, (50,50))
+		self.__paddle1 = Paddle(self.screen, (50,50), True)
+		self.__paddle2 = Paddle(self.screen, (PyPong.WIDTH, 50), False)
 		self.__table = Table(self.screen, (200, 350))
 		self.__net = Net(self.screen, (499, 300))
 		self.__ball = Ball(self.screen, (200, 100))
